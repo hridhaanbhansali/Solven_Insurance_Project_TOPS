@@ -30,10 +30,10 @@ def get_original_data():
     
     # Fill missing similar to training
     for col in df.columns:
-        if df[col].dtype == 'object':
-            df[col] = df[col].fillna(df[col].mode()[0])
-        else:
+        if pd.api.types.is_numeric_dtype(df[col]):
             df[col] = df[col].fillna(df[col].median())
+        else:
+            df[col] = df[col].fillna(df[col].mode()[0])
     return df
 
 st.title("📈 Insurance Customer Lifetime Value Prediction")
@@ -122,10 +122,10 @@ with tab2:
             
         for col in process_df.columns:
             if col in df_original.columns:
-                if process_df[col].dtype == 'object':
-                    process_df[col] = process_df[col].fillna(df_original[col].mode()[0])
-                else:
+                if pd.api.types.is_numeric_dtype(df_original[col]):
                     process_df[col] = process_df[col].fillna(df_original[col].median())
+                else:
+                    process_df[col] = process_df[col].fillna(df_original[col].mode()[0])
                 
         if st.button("Run Batch Prediction"):
             with st.spinner("Predicting..."):
